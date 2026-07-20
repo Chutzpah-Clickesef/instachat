@@ -36,6 +36,8 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+# ...mas o modelo (sem segredos) DEVE ir pro repo:
+!.env.example
 
 # vercel
 .vercel
