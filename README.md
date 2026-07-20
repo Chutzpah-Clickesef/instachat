@@ -15,6 +15,15 @@ to your story**, they automatically receive a **DM with your link**.
 Built to run entirely on **free tiers** (Supabase + Vercel + a Meta Developer
 app in dev mode). You host your own copy and connect your own Instagram account.
 
+> **Single-tenant by design.** Each person runs their **own copy** and connects
+> **one** Instagram account. That means **every user creates their own Meta
+> Developer app** (with their own Facebook login used only to access
+> [developers.facebook.com](https://developers.facebook.com)). The upside: **no
+> Facebook Page and no Meta App Review** are required — you're just the tester of
+> your own app, which keeps it free. Letting *other* people connect their
+> Instagram to a single shared app would require Meta **App Review + Business
+> Verification** (a different, much heavier setup — not what this project does).
+
 > **License:** MIT — free to use, copy, modify and distribute.
 
 ---

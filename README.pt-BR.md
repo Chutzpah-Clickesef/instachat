@@ -17,6 +17,16 @@ Feito para rodar 100% em **planos grátis** (Supabase + Vercel + um app da Meta
 em modo de desenvolvimento). Você hospeda a sua própria cópia e conecta o seu
 próprio Instagram.
 
+> **É single-tenant, por design.** Cada pessoa roda a **própria cópia** e conecta
+> **uma** conta do Instagram. Ou seja, **cada usuário cria o próprio app na Meta**
+> (com a própria conta do Facebook, usada só para acessar o
+> [developers.facebook.com](https://developers.facebook.com)). O lado bom: **não
+> precisa de página do Facebook nem de App Review** da Meta — você é apenas o
+> testador do seu próprio app, o que mantém tudo grátis. Permitir que *outras*
+> pessoas conectem o Instagram delas a um único app compartilhado exigiria
+> **App Review + Verificação de Negócio** da Meta (um cenário bem mais pesado —
+> não é o que este projeto faz).
+
 > **Licença:** MIT — livre para usar, copiar, modificar e distribuir.
 
 ---
