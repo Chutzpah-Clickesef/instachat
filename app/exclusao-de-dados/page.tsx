@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { env } from "@/lib/env";
 
 export const metadata: Metadata = {
   title: "Exclusão de Dados — InstaChat",
@@ -21,11 +22,8 @@ export default function ExclusaoDeDadosPage() {
       <ol className="mt-2 list-decimal space-y-1 pl-5">
         <li>
           Envie um e-mail para{" "}
-          <a
-            href="mailto:victorhanielbusiness@gmail.com"
-            className="text-pink-600 underline"
-          >
-            victorhanielbusiness@gmail.com
+          <a href={`mailto:${env.contactEmail}`} className="text-pink-600 underline">
+            {env.contactEmail}
           </a>{" "}
           com o assunto <b>“Exclusão de dados”</b>.
         </li>

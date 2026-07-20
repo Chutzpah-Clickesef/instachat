@@ -41,4 +41,12 @@ export const env = {
   get cronSecret(): string {
     return required("CRON_SECRET");
   },
+  // Opcional: e-mail de contato exibido nas páginas públicas de privacidade.
+  get contactEmail(): string {
+    return process.env.CONTACT_EMAIL || "contato@exemplo.com";
+  },
+  // Opcional: nome do app (para quem faz self-host e quer renomear).
+  get appName(): string {
+    return process.env.APP_NAME || "InstaChat";
+  },
 };

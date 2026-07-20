@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { env } from "@/lib/env";
 
 export const metadata: Metadata = {
   title: "Política de Privacidade — InstaChat",
@@ -65,11 +66,8 @@ export default function PrivacidadePage() {
       <h2 className="mt-8 text-lg font-semibold">Contato</h2>
       <p className="mt-2">
         Dúvidas sobre privacidade:{" "}
-        <a
-          href="mailto:victorhanielbusiness@gmail.com"
-          className="text-pink-600 underline"
-        >
-          victorhanielbusiness@gmail.com
+        <a href={`mailto:${env.contactEmail}`} className="text-pink-600 underline">
+          {env.contactEmail}
         </a>
         .
       </p>
