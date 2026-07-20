@@ -52,10 +52,10 @@ export default function PostSelector({
         <button
           type="button"
           onClick={() => setSelected(null)}
-          className={`rounded-full border px-3 py-1 text-xs ${
+          className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
             selected === null
-              ? "border-pink-500 bg-pink-50 text-pink-700 dark:bg-pink-950/40"
-              : "border-neutral-300 dark:border-neutral-700"
+              ? "border-ig-blue bg-ig-blue/5 text-ig-blue"
+              : "border-neutral-300 text-neutral-600 hover:border-neutral-400"
           }`}
         >
           Qualquer post
@@ -85,8 +85,8 @@ export default function PostSelector({
                 type="button"
                 onClick={() => setSelected(m.id)}
                 title={m.caption ?? ""}
-                className={`relative aspect-square overflow-hidden rounded-lg border-2 ${
-                  isSel ? "border-pink-500" : "border-transparent"
+                className={`relative aspect-square overflow-hidden rounded-lg border-2 transition-all ${
+                  isSel ? "border-ig-blue shadow-md" : "border-transparent hover:border-neutral-300"
                 }`}
               >
                 {img ? (
@@ -102,7 +102,7 @@ export default function PostSelector({
                   </div>
                 )}
                 {isSel ? (
-                  <span className="absolute right-1 top-1 rounded-full bg-pink-600 px-1 text-[10px] text-white">
+                  <span className="ig-gradient absolute right-1 top-1 rounded-full px-1 text-[10px] font-bold text-white">
                     ✓
                   </span>
                 ) : null}

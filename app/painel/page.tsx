@@ -3,10 +3,7 @@ import { getConfig } from "@/lib/config";
 import { listAutomations } from "@/lib/automations";
 import { db } from "@/lib/supabase";
 import { formatSaoPaulo } from "@/lib/time";
-import {
-  toggleAutomationAction,
-  forceDrainAction,
-} from "./actions";
+import { toggleAutomationAction, forceDrainAction } from "./actions";
 
 async function queueStats() {
   const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
@@ -60,43 +57,47 @@ export default async function PainelPage({
       ) : null}
 
       {!connected ? (
-        <div className="rounded-2xl border border-pink-200 bg-pink-50 p-6 dark:border-pink-900 dark:bg-pink-950/40">
-          <h2 className="text-lg font-semibold">Conecte seu Instagram</h2>
-          <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-300">
-            Para as automações funcionarem, conecte a conta profissional que
-            você quer automatizar.
-          </p>
-          <a
-            href="/api/oauth/start"
-            className="mt-4 inline-block rounded-full bg-pink-600 px-5 py-2 text-sm font-medium text-white hover:bg-pink-700"
-          >
-            Conectar Instagram
-          </a>
+        <div className="ig-border relative overflow-hidden rounded-3xl p-7">
+          <div className="ig-glow pointer-events-none absolute inset-0" />
+          <div className="relative">
+            <h2 className="font-display text-xl font-bold">
+              Conecte seu Instagram
+            </h2>
+            <p className="mt-1.5 max-w-md text-sm text-neutral-600">
+              Para as automações funcionarem, conecte a conta profissional que
+              você quer automatizar.
+            </p>
+            <a
+              href="/api/oauth/start"
+              className="btn-ig mt-5 inline-block rounded-full px-6 py-2.5 text-sm font-semibold"
+            >
+              Conectar Instagram
+            </a>
+          </div>
         </div>
       ) : (
         <div className="grid grid-cols-3 gap-3">
           <Stat label="Na fila" value={stats.pending} />
-          <Stat label="Enviadas (1h)" value={`${stats.sentHour}/200`} />
+          <Stat label="Enviadas (1h)" value={`${stats.sentHour}/200`} highlight />
           <Stat label="Falhas" value={stats.failed} />
         </div>
       )}
 
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold">Automações</h1>
+      <div className="flex items-center justify-between gap-3">
+        <h1 className="font-display text-2xl font-bold tracking-tight">
+          Automações
+        </h1>
         <div className="flex items-center gap-2">
           {connected ? (
             <form action={forceDrainAction}>
-              <button
-                type="submit"
-                className="rounded-full border border-neutral-300 px-3 py-1.5 text-sm hover:bg-neutral-100 dark:border-neutral-700 dark:hover:bg-neutral-800"
-              >
+              <button type="submit" className={secondaryBtn}>
                 Forçar envio
               </button>
             </form>
           ) : null}
           <Link
             href="/painel/nova"
-            className="rounded-full bg-neutral-900 px-4 py-1.5 text-sm font-medium text-white hover:bg-neutral-700 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200"
+            className="btn-ig rounded-full px-4 py-1.5 text-sm font-semibold"
           >
             + Nova automação
           </Link>
@@ -104,7 +105,7 @@ export default async function PainelPage({
       </div>
 
       {automations.length === 0 ? (
-        <p className="rounded-2xl border border-dashed border-neutral-300 p-8 text-center text-sm text-neutral-500 dark:border-neutral-700">
+        <p className="rounded-3xl border border-dashed border-neutral-300 bg-neutral-50/60 p-10 text-center text-sm text-neutral-500">
           Nenhuma automação ainda. Crie a primeira em “+ Nova automação”.
         </p>
       ) : (
@@ -118,17 +119,17 @@ export default async function PainelPage({
             return (
               <li
                 key={a.id}
-                className="rounded-2xl border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900"
+                className="rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="font-medium">{a.name}</span>
+                      <span className="font-semibold">{a.name}</span>
                       <span
-                        className={`rounded-full px-2 py-0.5 text-xs ${
+                        className={`rounded-full px-2 py-0.5 text-xs font-medium ${
                           a.active
-                            ? "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300"
-                            : "bg-neutral-100 text-neutral-500 dark:bg-neutral-800"
+                            ? "bg-emerald-100 text-emerald-700"
+                            : "bg-neutral-100 text-neutral-500"
                         }`}
                       >
                         {a.active ? "ativa" : "pausada"}
@@ -151,17 +152,11 @@ export default async function PainelPage({
                         name="active"
                         value={a.active ? "false" : "true"}
                       />
-                      <button
-                        type="submit"
-                        className="rounded-full border border-neutral-300 px-3 py-1 text-xs hover:bg-neutral-100 dark:border-neutral-700 dark:hover:bg-neutral-800"
-                      >
+                      <button type="submit" className={pillBtn}>
                         {a.active ? "Pausar" : "Ativar"}
                       </button>
                     </form>
-                    <Link
-                      href={`/painel/editar/${a.id}`}
-                      className="rounded-full border border-neutral-300 px-3 py-1 text-xs hover:bg-neutral-100 dark:border-neutral-700 dark:hover:bg-neutral-800"
-                    >
+                    <Link href={`/painel/editar/${a.id}`} className={pillBtn}>
                       Editar
                     </Link>
                   </div>
@@ -175,11 +170,28 @@ export default async function PainelPage({
   );
 }
 
-function Stat({ label, value }: { label: string; value: React.ReactNode }) {
+const secondaryBtn =
+  "rounded-full border border-neutral-300 bg-white px-3 py-1.5 text-sm font-medium text-neutral-700 transition-colors hover:border-neutral-400 hover:bg-neutral-50";
+const pillBtn =
+  "rounded-full border border-neutral-200 px-3 py-1 text-xs font-medium text-neutral-700 transition-colors hover:border-ig-blue/40 hover:text-ig-blue";
+
+function Stat({
+  label,
+  value,
+  highlight,
+}: {
+  label: string;
+  value: React.ReactNode;
+  highlight?: boolean;
+}) {
   return (
-    <div className="rounded-2xl border border-neutral-200 bg-white p-4 text-center dark:border-neutral-800 dark:bg-neutral-900">
-      <div className="text-2xl font-semibold">{value}</div>
-      <div className="text-xs text-neutral-500">{label}</div>
+    <div className="rounded-2xl border border-neutral-200 bg-white p-4 text-center shadow-sm">
+      <div
+        className={`text-2xl font-bold ${highlight ? "text-ig-blue" : "text-neutral-900"}`}
+      >
+        {value}
+      </div>
+      <div className="mt-0.5 text-xs font-medium text-neutral-500">{label}</div>
     </div>
   );
 }
@@ -193,7 +205,7 @@ function Banner({
 }) {
   const cls =
     tone === "ok"
-      ? "bg-green-50 text-green-800 dark:bg-green-950/40 dark:text-green-300"
-      : "bg-red-50 text-red-800 dark:bg-red-950/40 dark:text-red-300";
-  return <div className={`rounded-xl px-4 py-3 text-sm ${cls}`}>{children}</div>;
+      ? "bg-emerald-50 text-emerald-800 ring-1 ring-emerald-200"
+      : "bg-red-50 text-red-800 ring-1 ring-red-200";
+  return <div className={`rounded-2xl px-4 py-3 text-sm ${cls}`}>{children}</div>;
 }

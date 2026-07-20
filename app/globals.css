@@ -1,26 +1,92 @@
 @import "tailwindcss";
 
+/* Desliga o modo escuro automático: o painel é sempre claro (fundo branco).
+   Os utilitários `dark:` existentes ficam inertes (só ativam sob .dark). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* Paleta Instagram */
+  --color-ig-orange: #f58529;
+  --color-ig-pink: #dd2a7b;
+  --color-ig-purple: #8134af;
+  /* Azul de ação do Instagram — usado nos botões e destaques */
+  --color-ig-blue: #0095f6;
+
+  --color-background: #ffffff;
+  --color-foreground: #171422;
+
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-bricolage), var(--font-jakarta), sans-serif;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+}
+
+/* ---- Assinatura Instagram (gradiente só em detalhes discretos) ---- */
+
+/* Gradiente do Instagram — usado apenas na hairline do topo e no logo. */
+.ig-gradient {
+  background-image: linear-gradient(
+    95deg,
+    #f58529 0%,
+    #dd2a7b 42%,
+    #8134af 74%,
+    #515bd4 100%
+  );
+}
+
+.ig-text {
+  background-image: linear-gradient(
+    95deg,
+    #f58529 0%,
+    #dd2a7b 42%,
+    #8134af 74%,
+    #515bd4 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* ---- Botão primário: azul sólido do Instagram ---- */
+.btn-ig {
+  background-color: #0095f6;
+  color: #fff;
+  transition:
+    background-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+.btn-ig:hover {
+  background-color: #0081d6;
+}
+.btn-ig:active {
+  background-color: #0075c2;
+}
+
+/* Cartão de destaque discreto (CTA de conexão / login). */
+.ig-border {
+  border: 1px solid #e6e6ea;
+  background: #ffffff;
+}
+
+/* Brilho de atmosfera bem sutil, em azul. */
+.ig-glow {
+  background: radial-gradient(
+    90% 130% at 50% 0%,
+    rgba(0, 149, 246, 0.06),
+    transparent 70%
+  );
 }

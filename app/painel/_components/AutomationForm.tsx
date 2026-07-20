@@ -4,8 +4,8 @@ import { saveAutomationAction, deleteAutomationAction } from "../actions";
 import PostSelector from "./PostSelector";
 
 const input =
-  "w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-pink-500 dark:border-neutral-700 dark:bg-neutral-800";
-const label = "block text-sm font-medium";
+  "w-full rounded-xl border border-neutral-300 bg-white px-3 py-2 text-sm outline-none transition-colors focus:border-ig-blue focus:ring-2 focus:ring-ig-blue/20";
+const label = "block text-sm font-semibold";
 const hint = "text-xs text-neutral-500";
 
 function Field({
@@ -34,8 +34,9 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section className="space-y-4 rounded-2xl border border-neutral-200 bg-white p-5 dark:border-neutral-800 dark:bg-neutral-900">
-      <h2 className="text-sm font-semibold uppercase tracking-wide text-neutral-500">
+    <section className="space-y-4 rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
+      <h2 className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-neutral-500">
+        <span className="bg-ig-blue h-3 w-1 rounded-full" />
         {title}
       </h2>
       {children}
@@ -245,13 +246,13 @@ export default function AutomationForm({
         <div className="flex gap-2">
           <button
             type="submit"
-            className="rounded-full bg-pink-600 px-5 py-2 text-sm font-medium text-white hover:bg-pink-700"
+            className="btn-ig rounded-full px-6 py-2 text-sm font-semibold"
           >
             Salvar
           </button>
           <Link
             href="/painel"
-            className="rounded-full border border-neutral-300 px-5 py-2 text-sm hover:bg-neutral-100 dark:border-neutral-700 dark:hover:bg-neutral-800"
+            className="rounded-full border border-neutral-300 bg-white px-5 py-2 text-sm font-medium text-neutral-700 transition-colors hover:border-neutral-400 hover:bg-neutral-50"
           >
             Cancelar
           </Link>
