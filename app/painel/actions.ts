@@ -11,6 +11,7 @@ import {
   type AutomationInput,
 } from "@/lib/automations";
 import { drainQueue } from "@/lib/engine";
+import { saveConfig } from "@/lib/config";
 import { PANEL_COOKIE, panelToken } from "@/lib/panel-auth";
 import type { MatchType } from "@/lib/types";
 
@@ -98,6 +99,19 @@ export async function deleteAutomationAction(fd: FormData) {
 export async function forceDrainAction() {
   await drainQueue();
   revalidatePath("/painel");
+}
+
+export async function disconnectInstagramAction() {
+  await saveConfig({
+    access_token: null,
+    ig_user_id: null,
+    username: null,
+    name: null,
+    profile_picture_url: null,
+    token_expires_at: null,
+  });
+  revalidatePath("/painel");
+  redirect("/painel");
 }
 
 export async function loginAction(fd: FormData) {
