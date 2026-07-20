@@ -32,6 +32,19 @@ const MATCH_LABEL: Record<string, string> = {
   any: "qualquer",
 };
 
+function errorMessage(code: string): string {
+  switch (code) {
+    case "meta_nao_configurada":
+      return "O app da Meta ainda não foi configurado. Falta cadastrar INSTAGRAM_APP_ID e INSTAGRAM_APP_SECRET (crie o app no Meta for Developers e adicione as variáveis de ambiente).";
+    case "state_invalido":
+      return "Sua sessão de login expirou. Clique em “Conectar Instagram” de novo.";
+    case "falha_conexao":
+      return "Não foi possível conectar ao Instagram. Tente novamente.";
+    default:
+      return `Falha ao conectar (${code}). Tente de novo em “Conectar Instagram”.`;
+  }
+}
+
 export default async function PainelPage({
   searchParams,
 }: {
@@ -50,26 +63,22 @@ export default async function PainelPage({
           Instagram conectado como <b>@{config?.username}</b>. Tudo pronto! 🎉
         </Banner>
       ) : null}
-      {sp.error ? (
-        <Banner tone="err">
-          Falha ao conectar ({sp.error}). Tente de novo em “Conectar Instagram”.
-        </Banner>
-      ) : null}
+      {sp.error ? <Banner tone="err">{errorMessage(sp.error)}</Banner> : null}
 
       {!connected ? (
-        <div className="ig-border relative overflow-hidden rounded-3xl p-7">
+        <div className="ig-border relative overflow-hidden rounded-2xl p-7">
           <div className="ig-glow pointer-events-none absolute inset-0" />
           <div className="relative">
-            <h2 className="font-display text-xl font-bold">
+            <h2 className="font-display text-xl font-bold text-[#262626]">
               Conecte seu Instagram
             </h2>
-            <p className="mt-1.5 max-w-md text-sm text-neutral-600">
+            <p className="mt-1.5 max-w-md text-sm text-[#737373]">
               Para as automações funcionarem, conecte a conta profissional que
               você quer automatizar.
             </p>
             <a
               href="/api/oauth/start"
-              className="btn-ig mt-5 inline-block rounded-full px-6 py-2.5 text-sm font-semibold"
+              className="btn-ig mt-5 inline-block rounded-lg px-5 py-2.5 text-sm font-semibold"
             >
               Conectar Instagram
             </a>
@@ -97,7 +106,7 @@ export default async function PainelPage({
           ) : null}
           <Link
             href="/painel/nova"
-            className="btn-ig rounded-full px-4 py-1.5 text-sm font-semibold"
+            className="btn-ig rounded-lg px-4 py-2 text-sm font-semibold"
           >
             + Nova automação
           </Link>
@@ -105,7 +114,7 @@ export default async function PainelPage({
       </div>
 
       {automations.length === 0 ? (
-        <p className="rounded-3xl border border-dashed border-neutral-300 bg-neutral-50/60 p-10 text-center text-sm text-neutral-500">
+        <p className="rounded-2xl border border-dashed border-[#dbdbdb] bg-white p-10 text-center text-sm text-[#737373]">
           Nenhuma automação ainda. Crie a primeira em “+ Nova automação”.
         </p>
       ) : (
@@ -171,9 +180,8 @@ export default async function PainelPage({
 }
 
 const secondaryBtn =
-  "rounded-full border border-neutral-300 bg-white px-3 py-1.5 text-sm font-medium text-neutral-700 transition-colors hover:border-neutral-400 hover:bg-neutral-50";
-const pillBtn =
-  "rounded-full border border-neutral-200 px-3 py-1 text-xs font-medium text-neutral-700 transition-colors hover:border-ig-blue/40 hover:text-ig-blue";
+  "btn-neutral rounded-lg px-3.5 py-2 text-[13px] font-semibold";
+const pillBtn = "btn-neutral rounded-lg px-3.5 py-1.5 text-[13px] font-semibold";
 
 function Stat({
   label,

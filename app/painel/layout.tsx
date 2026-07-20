@@ -1,6 +1,9 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
 import { getConfig } from "@/lib/config";
+import { PANEL_COOKIE, panelToken } from "@/lib/panel-auth";
 import { logoutAction } from "./actions";
+import Logo from "./_components/Logo";
 
 export default async function PainelLayout({
   children,
@@ -10,50 +13,60 @@ export default async function PainelLayout({
   const config = await getConfig();
   const connected = !!config?.access_token && !!config?.ig_user_id;
 
-  return (
-    <div className="min-h-full bg-white text-neutral-900">
-      {/* assinatura Instagram no topo */}
-      <div className="ig-gradient h-1 w-full" />
+  const password = process.env.PANEL_PASSWORD;
+  const cookieStore = await cookies();
+  const cookie = cookieStore.get(PANEL_COOKIE)?.value;
+  const authed = password ? cookie === (await panelToken(password)) : true;
+  const showSair = authed && !!password;
 
-      <header className="sticky top-0 z-10 border-b border-neutral-200/80 bg-white/85 backdrop-blur-md">
-        <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-3.5">
-          <Link
-            href="/painel"
-            className="ig-text font-display text-xl font-extrabold tracking-tight"
-          >
-            InstaChat
+  return (
+    <div className="min-h-full bg-neutral-50 text-[#262626]">
+      <div className="ig-gradient h-[3px] w-full" />
+
+      <header className="sticky top-0 z-10 border-b border-[#dbdbdb] bg-white/90 backdrop-blur-md">
+        <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-3">
+          <Link href="/painel" aria-label="InstaChat — início">
+            <Logo />
           </Link>
 
-          {connected ? (
-            <div className="flex items-center gap-3 text-sm">
-              <span className="flex items-center gap-2 rounded-full border border-neutral-200 bg-white py-1 pl-1 pr-3 shadow-sm">
-                {config?.profile_picture_url ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={config.profile_picture_url}
-                    alt=""
-                    className="h-6 w-6 rounded-full object-cover ring-2 ring-ig-blue/30"
-                  />
-                ) : (
-                  <span className="ig-gradient h-6 w-6 rounded-full" />
-                )}
-                <span className="font-semibold">@{config?.username}</span>
-              </span>
-              <form action={logoutAction}>
-                <button
-                  type="submit"
-                  className="text-neutral-400 transition-colors hover:text-neutral-700"
-                >
-                  Sair
-                </button>
-              </form>
+          {authed ? (
+            <div className="flex items-center gap-1 sm:gap-3">
+              {connected ? (
+                <span className="flex items-center gap-2 text-sm">
+                  {config?.profile_picture_url ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={config.profile_picture_url}
+                      alt=""
+                      className="h-7 w-7 rounded-full object-cover ring-1 ring-[#dbdbdb]"
+                    />
+                  ) : (
+                    <span className="ig-gradient h-7 w-7 rounded-full" />
+                  )}
+                  <span className="font-semibold">@{config?.username}</span>
+                </span>
+              ) : (
+                <span className="flex items-center gap-2 text-[13px] font-medium text-[#737373]">
+                  <span className="relative flex h-2 w-2">
+                    <span className="absolute inline-flex h-full w-full rounded-full bg-amber-400/60" />
+                    <span className="relative inline-flex h-2 w-2 rounded-full bg-amber-500" />
+                  </span>
+                  Sem conta conectada
+                </span>
+              )}
+
+              {showSair ? (
+                <form action={logoutAction}>
+                  <button
+                    type="submit"
+                    className="rounded-lg px-2.5 py-1.5 text-[13px] font-semibold text-[#737373] transition-colors hover:bg-neutral-100 hover:text-[#262626]"
+                  >
+                    Sair
+                  </button>
+                </form>
+              ) : null}
             </div>
-          ) : (
-            <span className="flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-sm font-medium text-neutral-500">
-              <span className="h-2 w-2 rounded-full bg-neutral-300" />
-              não conectado
-            </span>
-          )}
+          ) : null}
         </div>
       </header>
 

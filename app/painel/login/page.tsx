@@ -10,13 +10,13 @@ export default async function LoginPage({
 
   return (
     <div className="mx-auto mt-6 max-w-sm">
-      <div className="ig-border relative overflow-hidden rounded-3xl p-7">
+      <div className="ig-border relative overflow-hidden rounded-2xl p-7">
         <div className="ig-glow pointer-events-none absolute inset-0" />
         <div className="relative">
-          <h1 className="font-display text-2xl font-bold tracking-tight">
+          <h1 className="font-display text-2xl font-bold tracking-tight text-[#262626]">
             Entrar no painel
           </h1>
-          <p className="mt-1 text-sm text-neutral-500">
+          <p className="mt-1 text-sm text-[#737373]">
             Digite a senha do painel para continuar.
           </p>
 
@@ -33,11 +33,11 @@ export default async function LoginPage({
               name="password"
               placeholder="Senha"
               autoFocus
-              className="w-full rounded-xl border border-neutral-300 bg-white px-3 py-2.5 text-sm outline-none transition-colors focus:border-ig-blue focus:ring-2 focus:ring-ig-blue/20"
+              className="w-full rounded-lg border border-[#dbdbdb] bg-white px-3 py-2.5 text-sm outline-none transition-colors focus:border-ig-blue focus:ring-2 focus:ring-ig-blue/20"
             />
             <button
               type="submit"
-              className="btn-ig w-full rounded-xl px-4 py-2.5 text-sm font-semibold"
+              className="btn-ig w-full rounded-lg px-4 py-2.5 text-sm font-semibold"
             >
               Entrar
             </button>

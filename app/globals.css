@@ -12,7 +12,8 @@
   /* Azul de ação do Instagram — usado nos botões e destaques */
   --color-ig-blue: #0095f6;
 
-  --color-background: #ffffff;
+  /* off-white (mesmo fundo do Instagram web); cartões ficam em branco */
+  --color-background: #fafafa;
   --color-foreground: #171422;
 
   --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
@@ -70,10 +71,20 @@ body {
     box-shadow 0.15s ease;
 }
 .btn-ig:hover {
-  background-color: #0081d6;
+  background-color: #1877f2;
 }
 .btn-ig:active {
   background-color: #0075c2;
+}
+
+/* ---- Botão secundário: cinza do Instagram ---- */
+.btn-neutral {
+  background-color: #efefef;
+  color: #262626;
+  transition: background-color 0.15s ease;
+}
+.btn-neutral:hover {
+  background-color: #e2e2e2;
 }
 
 /* Cartão de destaque discreto (CTA de conexão / login). */
