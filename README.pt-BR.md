@@ -4,6 +4,10 @@
 [![Português](https://img.shields.io/badge/Portugu%C3%AAs-1f9d55?style=for-the-badge)](README.pt-BR.md)
 [![+ Adicionar idioma](https://img.shields.io/badge/+_Adicionar_idioma-eaeaea?style=for-the-badge)](#-tradu%C3%A7%C3%B5es)
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+![Next.js 16](https://img.shields.io/badge/Next.js-16-black?logo=nextdotjs)
+![Node 22+](https://img.shields.io/badge/Node-22%2B-5FA04E?logo=nodedotjs&logoColor=white)
+
 Uma alternativa ao ManyChat **sem mensalidade** e com o código na sua mão, para
 automatizar DMs do Instagram. Quando alguém **comenta uma palavra-chave** num
 post/reels ou **responde ao seu story**, a pessoa recebe automaticamente uma
@@ -41,6 +45,18 @@ Como o plano grátis da Vercel não roda cron de minuto, o **`pg_cron` + `pg_net
 do Supabase** batem no endpoint de drenagem a cada minuto e renovam o token de
 60 dias uma vez por semana. O webhook também dispara a drenagem pelo `after()`
 do Next.js, para o envio parecer instantâneo.
+
+```mermaid
+flowchart LR
+    U([Alguém comenta / manda DM]) --> IG[Instagram]
+    IG -- evento webhook --> WH["/api/webhook<br/>(assinatura HMAC)"]
+    WH -- enfileira --> Q[(Fila no Supabase)]
+    CRON["pg_cron do Supabase<br/>a cada minuto"] --> DR["/api/cron/drain"]
+    WH -- after --> DR
+    DR -- claim_queue<br/>SKIP LOCKED --> Q
+    DR -- envia --> IG
+    IG -- DM com o link --> U
+```
 
 ## Tecnologias
 
@@ -95,6 +111,15 @@ node -e "console.log(require('crypto').randomBytes(24).toString('hex'))"
 
 Após o primeiro deploy, defina `APP_URL` com a sua URL de produção
 (ex.: `https://seu-app.vercel.app`, sem barra no final) e republique.
+
+> **A Vercel não é obrigatória.** O InstaChat é um Next.js comum — roda em
+> qualquer host que ofereça uma **URL pública, sempre ligada e com HTTPS**
+> (necessária para o Instagram alcançar o webhook e o callback do OAuth).
+> Alternativas: **Railway**, **Render**, **Fly.io**, **Netlify** ou seu próprio
+> **VPS** (`npm run build && npm start` atrás de nginx/Caddy). Só para testar
+> localmente, rode `npm run dev` e exponha com um túnel como o **ngrok**
+> (`ngrok http 3000`) — ótimo para experimentar, mas o túnel só vive enquanto
+> sua máquina está ligada.
 
 ### 5. App na Meta (API do Instagram com Login do Instagram)
 

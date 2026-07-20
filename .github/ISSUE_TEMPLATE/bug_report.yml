@@ -1,0 +1,45 @@
+name: 🐛 Bug report
+description: Report something that isn't working
+labels: [bug]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A clear description of the bug and what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Go to ...
+        2. Comment '...'
+        3. See ...
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Webhook / events
+        - OAuth / connecting Instagram
+        - Queue / sending
+        - Panel (automations)
+        - Deploy / setup
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: env
+    attributes:
+      label: Environment
+      description: Host (Vercel/VPS/...), Node version, anything relevant. Do NOT paste secrets.
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Relevant logs. Redact tokens and keys.
+      render: shell

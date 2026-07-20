@@ -4,6 +4,10 @@
 [![Português](https://img.shields.io/badge/Portugu%C3%AAs-eaeaea?style=for-the-badge)](README.pt-BR.md)
 [![+ Add a language](https://img.shields.io/badge/+_Add_a_language-eaeaea?style=for-the-badge)](#-translations)
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+![Next.js 16](https://img.shields.io/badge/Next.js-16-black?logo=nextdotjs)
+![Node 22+](https://img.shields.io/badge/Node-22%2B-5FA04E?logo=nodedotjs&logoColor=white)
+
 A self-hosted, **no-monthly-cost** alternative to ManyChat for Instagram DM
 automation. When someone **comments a keyword** on your post/reel or **replies
 to your story**, they automatically receive a **DM with your link**.
@@ -38,6 +42,18 @@ Since Vercel's free tier has no minute‑level cron, **Supabase `pg_cron` +
 `pg_net`** hit the drain endpoint every minute and refresh the 60‑day token
 weekly. The webhook also triggers a drain via Next.js `after()` for near‑instant
 sends.
+
+```mermaid
+flowchart LR
+    U([Someone comments / DMs]) --> IG[Instagram]
+    IG -- webhook event --> WH["/api/webhook<br/>(HMAC verified)"]
+    WH -- enqueue --> Q[(Supabase queue)]
+    CRON["Supabase pg_cron<br/>every minute"] --> DR["/api/cron/drain"]
+    WH -- after --> DR
+    DR -- claim_queue<br/>SKIP LOCKED --> Q
+    DR -- send --> IG
+    IG -- DM with link --> U
+```
 
 ## Tech stack
 
@@ -92,6 +108,14 @@ node -e "console.log(require('crypto').randomBytes(24).toString('hex'))"
 
 After the first deploy, set `APP_URL` to your production URL
 (e.g. `https://your-app.vercel.app`, no trailing slash) and redeploy.
+
+> **Vercel is not required.** InstaChat is a standard Next.js app — it runs on
+> any host that gives you a **public, always‑on HTTPS URL** (needed so Instagram
+> can reach the webhook and OAuth callback). Alternatives: **Railway**,
+> **Render**, **Fly.io**, **Netlify**, or your own **VPS**
+> (`npm run build && npm start` behind nginx/Caddy). For local testing only, run
+> `npm run dev` and expose it with a tunnel like **ngrok** (`ngrok http 3000`) —
+> good for trying it out, but the tunnel lives only while your machine is on.
 
 ### 5. Meta app (Instagram API with Instagram Login)
 
