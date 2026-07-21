@@ -44,6 +44,16 @@ próprio Instagram.
 - **Painel** de administração protegido por senha para criar e gerenciar
   automações.
 
+## 📸 Telas
+
+Funcionando, conectado a uma conta real do Instagram.
+
+| Painel conectado (fila + limite por hora) | Editor de automação + seletor visual de posts |
+| :---: | :---: |
+| ![Painel conectado mostrando a fila de envio e o limite por hora](docs/screenshots/dashboard-connected.png) | ![Editor de automação com o seletor visual de posts carregando posts reais](docs/screenshots/automation-editor.png) |
+| **Login protegido por senha** | **Menu de conta** |
+| ![Tela de login do painel](docs/screenshots/login.png) | ![Menu de conta aberto no painel vazio](docs/screenshots/dashboard-empty.png) |
+
 ## Como funciona
 
 Um webhook recebe os eventos `comments`/`messages` e valida a assinatura

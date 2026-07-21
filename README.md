@@ -40,6 +40,16 @@ app in dev mode). You host your own copy and connect your own Instagram account.
   rate limits (~2/sec, ~200 DMs/hour).
 - Password‑protected admin **panel** to create/manage automations.
 
+## 📸 Screenshots
+
+Running, connected to a real Instagram account.
+
+| Panel connected (queue + hourly limits) | Automation editor + visual post picker |
+| :---: | :---: |
+| ![Connected dashboard showing the send queue and hourly limit](docs/screenshots/dashboard-connected.png) | ![Automation editor with the visual post picker loading real posts](docs/screenshots/automation-editor.png) |
+| **Password-protected login** | **Account menu** |
+| ![Panel login screen](docs/screenshots/login.png) | ![Account menu open on the empty dashboard](docs/screenshots/dashboard-empty.png) |
+
 ## How it works
 
 A webhook ingests `comments`/`messages` events and validates the
