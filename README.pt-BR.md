@@ -162,6 +162,109 @@ Comente a palavra-chave de outra conta e veja a DM sair.
 
 ---
 
+## 🧭 Passo a passo completo (com erros comuns)
+
+Guia detalhado, na ordem real, do zero até a automação enviando DM. Onde
+aparecer `SEU_APP`, troque pela sua URL de produção (ex.:
+`https://seu-app.vercel.app`).
+
+### Parte 1 — Banco (Supabase)
+
+1. Crie uma conta e um **novo projeto** em [supabase.com](https://supabase.com)
+   (região mais perto de você). Ao criar, você pode **desligar** "Automatically
+   expose new tables".
+2. **SQL Editor → New query** → cole e rode o
+   [`supabase/schema.sql`](supabase/schema.sql). Deve dar "Success".
+3. **Project Settings → API** → copie a **Project URL** e a **service_role key**.
+
+> ⚠️ **Erro comum:** `permission denied for table ...` ao acessar o banco. É por
+> causa do "expose new tables" desligado. O `schema.sql` já concede acesso à
+> `service_role`; se rodou uma versão antiga, rode os `GRANT ... TO service_role`.
+
+### Parte 2 — Código e deploy
+
+4. `git clone` → `npm install` → `cp .env.example .env.local`. Use **Node 22+**.
+5. Gere os segredos e preencha o `.env.local`:
+   ```bash
+   node -e "console.log(require('crypto').randomBytes(16).toString('hex'))" # WEBHOOK_VERIFY_TOKEN
+   node -e "console.log(require('crypto').randomBytes(24).toString('hex'))" # CRON_SECRET
+   ```
+6. Publique na Vercel (importando o repo do GitHub ou pelo botão de deploy).
+   Cadastre as env: `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`,
+   `WEBHOOK_VERIFY_TOKEN`, `CRON_SECRET`, `PANEL_PASSWORD`.
+7. Após o 1º deploy, você já tem a URL. Cadastre `APP_URL=SEU_APP` e **republique**.
+
+> ⚠️ **Erro comum:** `@supabase/supabase-js` quebra com "native WebSocket not
+> found" → você está em **Node < 22**. Use Node 22+ (localmente e na Vercel).
+> ⚠️ **Erro comum:** mudou uma env na Vercel e "não pegou"? Env só vale após um
+> **Redeploy**.
+
+### Parte 3 — App na Meta
+
+8. Em [developers.facebook.com](https://developers.facebook.com), **Criar
+   aplicativo** → tipo **Empresa**.
+
+> ⚠️ **Erro comum:** o nome do app é **recusado**. Ele **não pode conter**
+> "Instagram", "Insta", "IG", "Facebook", "Meta". Use um nome neutro
+> (ex.: "Minha Empresa Chat").
+
+9. No painel do app → **Produtos disponíveis** → **Instagram → Configurar** →
+   **"Configuração da API com login do Instagram"**.
+10. Anote o **ID do app do Instagram** e a **Chave secreta do app do Instagram**
+    (não confunda com o *ID do app do Facebook* lá no topo — não é esse).
+    Cadastre na Vercel como `INSTAGRAM_APP_ID` e `INSTAGRAM_APP_SECRET` e
+    **republique**.
+11. **Seção "Configure o login da empresa no Instagram" → Configurar** →
+    em **URI de redirecionamento** coloque exatamente:
+    `SEU_APP/api/oauth/callback` → **Salvar**.
+12. **Seção "Configure webhooks":**
+    - **URL de callback:** `SEU_APP/api/webhook`
+    - **Verificar token:** o mesmo valor de `WEBHOOK_VERIFY_TOKEN` na Vercel
+    - "Anexar certificado de cliente": **desligado**
+    - Clique em **Verificar e salvar** → depois **assine** os campos
+      **`comments`** e **`messages`** (não precisa de `live_comments`).
+
+> ⚠️ **Erro comum:** a verificação do webhook falha. Quase sempre o **verify
+> token** na Meta está diferente do `WEBHOOK_VERIFY_TOKEN` na Vercel — ou você
+> mudou a env e **não republicou**.
+
+### Parte 4 — Testador e publicação
+
+13. **Funções (Roles)** → adicione sua conta como **Testador do Instagram**.
+    Ela vai ficar **"Pendente"** até você **aceitar o convite**.
+14. Aceite o convite (na conta que vai automatizar): no **navegador**, em
+    [instagram.com/accounts/manage_access](https://www.instagram.com/accounts/manage_access/)
+    → aba **"Convites de testador"** → **Aceitar**.
+
+> ⚠️ **Erro comum:** ao conectar aparece **"Insufficient Developer Role"**. É
+> convite de testador **não aceito** (ainda "Pendente"), ou você está
+> autorizando com uma **conta diferente** da que aceitou. A conta também precisa
+> ser **profissional E pública**.
+
+15. **Configurações do app → Básico:** preencha **Política de Privacidade**
+    (`SEU_APP/privacidade`) e **Exclusão de dados** (`SEU_APP/exclusao-de-dados`),
+    escolha uma **categoria** e **salve**.
+16. No topo, mude o **Modo do aplicativo** para **Ao vivo**.
+
+> ⚠️ **Importante:** em **modo de desenvolvimento a Meta NÃO entrega** os eventos
+> de comentário. O app **precisa estar Ao vivo** — e para publicar ela exige a
+> URL de Política de Privacidade (por isso as páginas `/privacidade` e
+> `/exclusao-de-dados` já vêm prontas).
+
+### Parte 5 — Conectar, agendar e testar
+
+17. Abra `SEU_APP/painel`, entre com a `PANEL_PASSWORD`, clique em
+    **Conectar Instagram** e autorize.
+18. Ligue o "relógio" grátis: edite [`supabase/cron.sql`](supabase/cron.sql)
+    (troque `__APP_URL__` e `__CRON_SECRET__`) e rode no SQL Editor.
+19. Crie/ative uma automação (palavra-chave, DM de boas-vindas com botão, link)
+    e **comente a palavra-chave de outra conta**. Acompanhe a fila no painel.
+
+> ⚠️ **Erro comum:** conectou mas os comentários não viram DM. Verifique: o app
+> está **Ao vivo**? Os campos **comments/messages** estão **assinados**? A
+> automação está **ativa** e a palavra-chave bate? O comentário veio de **outra**
+> conta (o app ignora comentários da própria conta)?
+
 ## Limites reais (regras da Meta)
 
 - **Não dá** para exigir que a pessoa te siga antes de mandar o link — a API não

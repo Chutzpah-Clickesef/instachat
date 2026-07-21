@@ -155,6 +155,36 @@ automation. Comment your keyword from another account and watch the DM go out.
 
 ---
 
+## Troubleshooting (common pitfalls)
+
+Hit a wall during setup? These are the exact issues you're most likely to run
+into (a full step-by-step walkthrough is in
+[README.pt-BR.md](README.pt-BR.md#-passo-a-passo-completo-com-erros-comuns)):
+
+- **App name rejected on Meta** — the name **can't contain** "Instagram",
+  "Insta", "IG", "Facebook" or "Meta". Use a neutral name.
+- **`permission denied for table ...` (Supabase)** — the `schema.sql` grants
+  access to `service_role`; re-run the `GRANT ... TO service_role` statements
+  (needed because "expose new tables" is off).
+- **`@supabase/supabase-js` — "native WebSocket not found"** — you're on
+  **Node < 22**. Use Node 22+ locally and on your host.
+- **Env var change didn't take effect** — Vercel env changes require a
+  **redeploy**.
+- **`/api/oauth/start` errors / can't connect** — `INSTAGRAM_APP_ID`,
+  `INSTAGRAM_APP_SECRET` or `APP_URL` missing from env (the app now shows a
+  friendly notice instead of a 500).
+- **Webhook verification fails** — the verify token on Meta must **exactly
+  match** `WEBHOOK_VERIFY_TOKEN` in your env (and you must have redeployed).
+- **"Insufficient Developer Role" when connecting** — the Instagram **tester
+  invite wasn't accepted** (still "Pending"), or you're authorizing with a
+  different account. Accept it at
+  [instagram.com/accounts/manage_access](https://www.instagram.com/accounts/manage_access/)
+  → **Tester invites**. The account must be **professional AND public**.
+- **Connected, but comments don't turn into DMs** — the app must be **Live**
+  (development mode does not deliver webhooks); the `comments`/`messages` fields
+  must be **subscribed**; the automation must be **active**; and the comment must
+  come from **another account** (your own comments are ignored).
+
 ## Real limitations (by Meta's rules)
 
 - You **cannot** require someone to follow you before sending the link — the API
